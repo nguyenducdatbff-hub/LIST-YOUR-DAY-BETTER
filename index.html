@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aesthetic Focus To-Do & Companion</title>
+  <meta name="description" content="Chiếc App To-Do List thẩm mỹ với hình nền tự chọn và nhân vật đồng hành chúc mừng">
+  
+  <!-- PWA Manifest & Meta -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1e1e2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌸</text></svg>">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css?v=3">
+  <link rel="stylesheet" href="css/companion.css?v=3">
+</head>
+<body>
+
+  <!-- Dynamic Wallpaper & Configurable Blur/Darkness Overlays -->
+  <div id="wallpaper-layer"></div>
+  <div id="wallpaper-overlay"></div>
+
+  <!-- Confetti Canvas for Celebrations -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Main Viewport -->
+  <main class="app-viewport">
+
+    <!-- App Header -->
+    <header class="glass-panel app-header">
+      <div class="brand-wrapper">
+        <div class="brand-logo-icon">🌸</div>
+        <div class="brand-text">
+          <h1>Focus Space</h1>
+          <p>Không gian làm việc & to-do list của riêng cậu</p>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <button id="btn-toggle-sound" class="icon-btn" title="Bật/Tắt âm thanh chúc mừng">
+          <span>🔔</span> Bật Âm
+        </button>
+        <button id="btn-open-theme-modal" class="icon-btn" title="Tùy chỉnh hình nền & giao diện">
+          <span>🖼️</span> Đổi Nền
+        </button>
+        <button id="btn-open-companion-modal" class="icon-btn" title="Tùy chỉnh nhân vật & câu chúc">
+          <span>✨</span> Nhân Vật
+        </button>
+        <button id="btn-install-pwa" class="icon-btn" style="display: none;" title="Cài đặt thành App trên máy tính">
+          <span>💻</span> Cài App
+        </button>
+      </div>
+    </header>
+
+    <!-- Daily Completion Progress Card -->
+    <section class="glass-panel progress-card">
+      <div class="progress-header">
+        <span class="progress-title">🎯 Tiến độ hoàn thành hôm nay</span>
+        <span id="progress-stats-text" class="progress-stats">0/0 hoàn thành (0%)</span>
+      </div>
+      <div class="progress-track">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+    </section>
+
+    <!-- Quick Task Composer -->
+    <section class="glass-panel task-composer">
+      <form id="task-composer-form" class="composer-form">
+        <div class="composer-main-row">
+          <input 
+            type="text" 
+            id="task-input-field" 
+            class="task-input-field" 
+            placeholder="Nhập việc cần làm hôm nay... (nhấn Enter để thêm)" 
+            autocomplete="off" 
+            required
+          />
+          <button type="submit" class="btn-add">
+            <span>➕</span> Thêm Việc
+          </button>
+        </div>
+
+        <div class="composer-meta-row">
+          <div class="meta-group">
+            <span class="meta-label">Mức ưu tiên:</span>
+            <div class="priority-selector">
+              <button type="button" class="prio-opt" data-prio="high">🔥 Gấp</button>
+              <button type="button" class="prio-opt selected" data-prio="medium">⭐ Thường</button>
+              <button type="button" class="prio-opt" data-prio="low">🌿 Thư thả</button>
+            </div>
+          </div>
+
+          <div class="meta-group">
+            <span class="meta-label">Hạn chót:</span>
+            <input type="date" id="task-due-date" class="date-input" />
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- Filter Bar -->
+    <section class="filter-container">
+      <div class="filter-chips">
+        <button class="chip-btn active" data-filter="all">
+          Tất cả <span id="count-all" class="filter-count">0</span>
+        </button>
+        <button class="chip-btn" data-filter="today">
+          📅 Hôm nay <span id="count-today" class="filter-count">0</span>
+        </button>
+        <button class="chip-btn" data-filter="pending">
+          ⏳ Chưa xong <span id="count-pending" class="filter-count">0</span>
+        </button>
+        <button class="chip-btn" data-filter="completed">
+          🎉 Đã xong <span id="count-completed" class="filter-count">0</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Task List Container -->
+    <section id="task-list-container" class="task-list">
+      <!-- Dynamically rendered task items -->
+    </section>
+
+  </main>
+
+  <!-- Interactive Mascot / Companion Pop-up Widget -->
+  <aside id="companion-widget" class="companion-widget" aria-live="polite">
+    <div id="companion-speech-bubble" class="companion-speech-bubble" title="Bấm để đóng">
+      <span class="speech-bubble-tag">Bạn đồng hành</span>
+      <p id="companion-quote-text">Tuyệt vời quá! Cậu đã hoàn thành thêm một việc rồi! ✨</p>
+    </div>
+    <div id="companion-avatar-box" class="companion-avatar-container" title="Bấm để đóng">
+      <img id="companion-img" class="companion-img" src="" alt="Companion Mascot" />
+      <div class="companion-sparkle sparkle-1">✨</div>
+      <div class="companion-sparkle sparkle-2">💖</div>
+    </div>
+  </aside>
+
+  <!-- Modal 1: Theme & Wallpaper Studio -->
+  <div id="modal-theme-settings" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2><span>🖼️</span> Tùy Chỉnh Hình Nền & Hiệu Ứng</h2>
+        <button class="btn-close-modal" title="Đóng">✕</button>
+      </div>
+      <div class="modal-body">
+        
+        <div>
+          <div class="setting-section-title">1. Chọn hình nền có sẵn (Aesthetic Presets)</div>
+          <div id="preset-wallpapers-list" class="wallpaper-grid">
+            <!-- Rendered by ThemeManager -->
+          </div>
+        </div>
+
+        <div>
+          <div class="setting-section-title">2. Tải ảnh/GIF từ máy tính của bạn</div>
+          <label class="upload-box" for="custom-wallpaper-file">
+            <div class="upload-box-icon">📁</div>
+            <p><strong>Bấm vào đây để chọn ảnh hoặc GIF nền từ máy</strong></p>
+            <p style="font-size: 0.76rem; color: var(--text-muted); margin-top: 4px;">(Ảnh sẽ được lưu trực tiếp trên trình duyệt của bạn, hoạt động Offline)</p>
+            <input type="file" id="custom-wallpaper-file" accept="image/*" style="display: none;" />
+          </label>
+        </div>
+
+        <div>
+          <div class="setting-section-title">3. Tinh chỉnh độ sáng & độ mờ kính Glassmorphism</div>
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="range-group">
+              <div class="range-label-row">
+                <span>Độ tối lớp phủ nền (giúp chữ luôn rõ nét)</span>
+                <strong id="setting-opacity-val">55%</strong>
+              </div>
+              <input type="range" id="setting-opacity-range" class="custom-range" min="0.1" max="0.9" step="0.05" value="0.55" />
+            </div>
+
+            <div class="range-group">
+              <div class="range-label-row">
+                <span>Độ mờ hậu cảnh (Background Blur)</span>
+                <strong id="setting-blur-val">0px</strong>
+              </div>
+              <input type="range" id="setting-blur-range" class="custom-range" min="0" max="25" step="1" value="0" />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <button id="btn-reset-theme" class="btn-test-celebration" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.4); color: #fca5a5;">
+            🧹 Reset Hình Nền Mặc Định & Cập Nhật Mới
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Companion Mascot & Dialogue Studio -->
+  <div id="modal-companion-settings" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2><span>✨</span> Cài Đặt Bạn Đồng Hành & Lời Chúc</h2>
+        <button class="btn-close-modal" title="Đóng">✕</button>
+      </div>
+      <div class="modal-body">
+        
+        <div>
+          <div class="setting-section-title">1. Avatar / Ảnh nhân vật của bạn</div>
+          <div class="avatar-preview-box">
+            <img id="current-avatar-preview" class="current-avatar-preview" src="" alt="Avatar Preview" />
+            <div style="flex: 1;">
+              <label class="icon-btn" for="custom-avatar-file" style="cursor: pointer; display: inline-flex;">
+                <span>📸</span> Tải ảnh / GIF nhân vật từ máy
+              </label>
+              <input type="file" id="custom-avatar-file" accept="image/*" style="display: none;" />
+              <p style="font-size: 0.76rem; color: var(--text-muted); margin-top: 6px;">
+                Cậu có thể tải lên ảnh hoạt hình, anime, chibi hoặc meme yêu thích.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="setting-section-title">2. Danh sách câu thoại chúc mừng ngẫu nhiên</div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div id="companion-quotes-list" class="quotes-list">
+              <!-- Rendered by CompanionManager -->
+            </div>
+
+            <form id="form-add-quote" class="add-quote-row">
+              <input type="text" id="input-new-quote" class="input-quote" placeholder="Thêm câu khen ngợi mới theo ý bạn..." required />
+              <button type="submit" class="btn-sm-add">Thêm câu</button>
+            </form>
+          </div>
+        </div>
+
+        <div>
+          <div class="setting-section-title">3. Trải nghiệm thử hiệu ứng</div>
+          <button id="btn-test-celebration" class="btn-test-celebration">
+            🎉 Bấm vào đây để thử Pop-up & Pháo hoa ngay lập tức!
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Logic Scripts -->
+  <script src="js/storage.js?v=3"></script>
+  <script src="js/audio.js?v=3"></script>
+  <script src="js/theme.js?v=3"></script>
+  <script src="js/companion.js?v=3"></script>
+  <script src="js/tasks.js?v=3"></script>
+  <script src="js/app.js?v=3"></script>
+</body>
+</html>

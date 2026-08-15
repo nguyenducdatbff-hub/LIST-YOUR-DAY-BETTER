@@ -1,0 +1,32 @@
+{
+  "name": "Aesthetic Focus To-Do",
+  "short_name": "Focus ToDo",
+  "description": "Ứng dụng To-Do List thẩm mỹ với hình nền tự chọn và nhân vật đồng hành chúc mừng",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#12121e",
+  "theme_color": "#6366f1",
+  "orientation": "any",
+  "lang": "vi",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
