@@ -1,29 +1,45 @@
-# 🌸 BẢNG ĐIỀU KHIỂN SẢN PHẨM: AESTHETIC FOCUS TO-DO & COMPANION
+# 🌸 BẢNG ĐIỀU KHIỂN XUẤT BẢN: AESTHETIC FOCUS TO-DO & COMPANION
 
-> **Trạng thái**: ✅ Đã hoàn thành nghiệm thu theo chuẩn **PM - Tech Lead SOP (100% Offline-First, Zero Cloud Cost)**.
-
----
-
-## 🚀 1. Cách Chạy Nhanh (1-Click Launchers)
-
-| Mục tiêu | Thao tác thực hiện |
-| :--- | :--- |
-| **Chạy 1-Click mở App ngay** | Nhấp đúp chuột vào file [`chay_app_todo.bat`](file:///f:/KI%E1%BA%BEM%20TI%E1%BB%80N%20NHA%20CON/aesthetic-todo/chay_app_todo.bat) |
-| **Mở trực tiếp file HTML** | Nhấp đúp chuột vào file [`index.html`](file:///f:/KI%E1%BA%BEM%20TI%E1%BB%80N%20NHA%20CON/aesthetic-todo/index.html) |
-| **Cài đặt thành App PC** | Mở trên Chrome/Edge ➔ Bấm nút **"Cài App 💻"** ở góc phải URL |
+> **Trạng thái**: ✅ Đã đóng gói hoàn chỉnh $100\%$ Offline-First, tương thích GitHub Pages toàn cầu 24/7.
 
 ---
 
-## 🌐 2. Địa chỉ Truy Cập Trong Mạng Nội Bộ (Local & Mobile)
+## 🚀 1. Hướng Dẫn Đẩy Lên GitHub (Chỉ 3 Bước Siêu Dễ)
 
-* **💻 Máy tính (PC / Laptop)**: [`http://localhost:3000`](http://localhost:3000)
-* **📱 Điện thoại (Cùng mạng Wi-Fi)**: Chạy file `.bat`, Terminal sẽ hiển thị link IP dạng `http://192.168.x.x:3000` để bạn mở trực tiếp trên Safari / Chrome điện thoại.
+### Bước 1: Tạo Repository Mới Trên GitHub
+1. Truy cập [github.com/new](https://github.com/new).
+2. Đặt tên Repository (ví dụ: `aesthetic-todo` hoặc `focus-space`).
+3. Chọn chế độ **Public** (Công khai).
+4. **Không tích** chọn *"Add a README file"* (vì dự án đã có sẵn README.md).
+5. Bấm nút xanh **Create repository**.
+6. Sao chép đường link HTTPS của repository (dạng: `https://github.com/username/aesthetic-todo.git`).
 
 ---
 
-## 👥 3. Nghiệm Thu Kỹ Thuật (Từ 4 Chuyên Gia Ảo)
+### Bước 2: Chạy File Đẩy Code 1-Click
+* Nhấp đúp chuột vào file: **[`day_len_github.bat`](file:///f:/KI%E1%BA%BEM%20TI%E1%BB%80N%20NHA%20CON/aesthetic-todo/day_len_github.bat)**
+* Dán đường link GitHub của bạn vào cửa sổ Terminal rồi nhấn **Enter**.
+* Toàn bộ mã nguồn sẽ tự động được đồng bộ lên GitHub trong vài giây!
 
-1. 🎨 **UI/UX & Motion Designer**: Giao diện Kính mờ Aero Glassmorphism cao cấp, hiệu ứng nảy Pop-up nhân vật và pháo hoa rực rỡ.
-2. ⚙️ **Mobile Engine & Core Dev**: Động cơ Web Audio API tổng hợp âm thanh không lo lỗi file, IndexedDB lưu trữ ảnh nền/GIF dung lượng lớn Offline.
-3. 🧪 **QA Edge Case Tester**: Đã test bộ lọc trạng thái, xử lý mượt mà khi người dùng xóa sạch dữ liệu, không có lỗi console.
-4. 📦 **Release & Store Ops**: Đóng gói chuẩn PWA Standalone, Service Worker cache tài nguyên, sẵn sàng đẩy lên GitHub Pages.
+---
+
+### Bước 3: Bật GitHub Pages (Để Có Link Dùng 24/7 Toàn Cầu)
+1. Trên trang GitHub Repository vừa tạo, bấm vào tab **Settings** (⚙️ Cài đặt) ở góc trên.
+2. Ở thanh menu bên trái, chọn **Pages**.
+3. Tại mục **Build and deployment**:
+   * **Source**: Chọn `Deploy from a branch`.
+   * **Branch**: Chọn `main` và thư mục `/ (root)`.
+4. Bấm **Save**.
+5. Đợi khoảng 1-2 phút, GitHub sẽ tạo cho bạn link chia sẻ 24/7 dạng:
+   👉 **`https://<ten-tai-khoan>.github.io/<ten-repo>/`**
+
+---
+
+## 📱 2. Hướng Dẫn Bạn Bè Cài Đặt Khi Nhận Được Link
+
+* **Trên Máy tính (PC / Laptop)**:
+  * Mở link trên **Chrome** hoặc **Edge** ➔ Bấm vào biểu tượng máy tính **"Cài đặt ứng dụng 💻"** ở góc phải thanh URL ➔ Bấm **Install**.
+* **Trên iPhone (iOS Safari)**:
+  * Mở link trên **Safari** ➔ Bấm nút **Chia sẻ `[ ↑ ]`** ➔ Chọn **"Thêm vào MH chính" (Add to Home Screen)**.
+* **Trên Android (Google Chrome)**:
+  * Mở link trên **Chrome** ➔ Bấm dấu **3 chấm `[ ⋮ ]`** ➔ Chọn **"Cài đặt ứng dụng"** hoặc **"Thêm vào màn hình chính"**.
