@@ -4,6 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', async () => {
   // 1. Initialize Sub-modules
+  await SoundEngine.init();
   await ThemeManager.init();
   await CompanionManager.init();
   TaskManager.init();
@@ -56,30 +57,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
-  // 5. Setup Header Action Buttons (Modals & Sound)
+  // 5. Setup Header Action Buttons & Modals
+  const btnOpenAudioModal = document.getElementById('btn-open-audio-modal');
   const btnThemeModal = document.getElementById('btn-open-theme-modal');
   const btnCompanionModal = document.getElementById('btn-open-companion-modal');
-  const btnMuteSound = document.getElementById('btn-toggle-sound');
   const btnInstallPwa = document.getElementById('btn-install-pwa');
 
+  const modalAudio = document.getElementById('modal-audio-settings');
   const modalTheme = document.getElementById('modal-theme-settings');
   const modalCompanion = document.getElementById('modal-companion-settings');
-
-  // Sound Mute Toggle
-  function updateSoundButtonUI() {
-    if (!btnMuteSound) return;
-    const isMuted = SoundEngine.getMuted();
-    btnMuteSound.innerHTML = isMuted ? '<span>🔇</span> Tắt Âm' : '<span>🔔</span> Bật Âm';
-    btnMuteSound.classList.toggle('active', !isMuted);
-  }
-
-  if (btnMuteSound) {
-    updateSoundButtonUI();
-    btnMuteSound.addEventListener('click', () => {
-      SoundEngine.toggleMute();
-      updateSoundButtonUI();
-    });
-  }
 
   // Modal Open / Close Logic
   function openModal(modal) {
@@ -90,6 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (modal) modal.classList.remove('open');
   }
 
+  if (btnOpenAudioModal) btnOpenAudioModal.addEventListener('click', () => openModal(modalAudio));
   if (btnThemeModal) btnThemeModal.addEventListener('click', () => openModal(modalTheme));
   if (btnCompanionModal) btnCompanionModal.addEventListener('click', () => openModal(modalCompanion));
 
@@ -107,6 +94,118 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
   });
+
+  // 6. Setup Audio Studio UI & Controls
+  const soundIconSpan = document.getElementById('sound-btn-icon');
+  const soundLabelSpan = document.getElementById('sound-btn-label');
+  const audioModeCards = document.querySelectorAll('.audio-mode-card');
+  const customAudioFileInput = document.getElementById('custom-audio-file');
+  const customAudioStatus = document.getElementById('custom-audio-status');
+  const soundVolumeRange = document.getElementById('sound-volume-range');
+  const soundVolumeVal = document.getElementById('sound-volume-val');
+  const btnTestSound = document.getElementById('btn-test-sound');
+  const btnResetAudio = document.getElementById('btn-reset-audio');
+
+  function syncAudioUI() {
+    const currentMode = SoundEngine.getMode();
+    const currentVol = SoundEngine.getVolume();
+
+    // Update Header Button
+    if (soundIconSpan && soundLabelSpan) {
+      if (currentMode === 'mute') {
+        soundIconSpan.textContent = '🔇';
+        soundLabelSpan.textContent = 'Tắt Âm';
+        if (btnOpenAudioModal) btnOpenAudioModal.classList.remove('active');
+      } else if (currentMode === 'voice') {
+        soundIconSpan.textContent = '🗣️';
+        soundLabelSpan.textContent = 'Giọng Nói';
+        if (btnOpenAudioModal) btnOpenAudioModal.classList.add('active');
+      } else if (currentMode === 'custom') {
+        soundIconSpan.textContent = '🎵';
+        soundLabelSpan.textContent = 'Âm Riêng';
+        if (btnOpenAudioModal) btnOpenAudioModal.classList.add('active');
+      } else {
+        soundIconSpan.textContent = '🔔';
+        soundLabelSpan.textContent = 'Chuông';
+        if (btnOpenAudioModal) btnOpenAudioModal.classList.add('active');
+      }
+    }
+
+    // Update Mode Cards in Modal
+    audioModeCards.forEach(card => {
+      card.classList.toggle('active', card.dataset.mode === currentMode);
+    });
+
+    // Update Volume Range
+    if (soundVolumeRange && soundVolumeVal) {
+      soundVolumeRange.value = currentVol;
+      soundVolumeVal.textContent = `${Math.round(currentVol * 100)}%`;
+    }
+
+    // Update Custom Audio Status
+    if (customAudioStatus) {
+      if (SoundEngine.hasCustomAudio()) {
+        customAudioStatus.innerHTML = '✅ <strong>Đã lưu 1 file âm thanh của bạn trong máy</strong>';
+        customAudioStatus.style.color = '#34d399';
+      } else {
+        customAudioStatus.innerHTML = '(Hỗ trợ file MP3, WAV, M4A nhạc khích lệ hoặc giọng thu âm)';
+        customAudioStatus.style.color = '#a5b4fc';
+      }
+    }
+  }
+
+  // Audio Mode Selection click
+  audioModeCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const mode = card.dataset.mode;
+      if (mode === 'custom' && !SoundEngine.hasCustomAudio()) {
+        // Prompt to upload file if none exists
+        if (customAudioFileInput) customAudioFileInput.click();
+        return;
+      }
+      SoundEngine.setMode(mode);
+      syncAudioUI();
+    });
+  });
+
+  // Custom Audio File Upload
+  if (customAudioFileInput) {
+    customAudioFileInput.addEventListener('change', async (e) => {
+      if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
+        await SoundEngine.setCustomAudio(file);
+        syncAudioUI();
+        SoundEngine.playCelebration("Chúc mừng cậu đã tải âm thanh thành công!");
+      }
+    });
+  }
+
+  // Volume Slider
+  if (soundVolumeRange && soundVolumeVal) {
+    soundVolumeRange.addEventListener('input', (e) => {
+      SoundEngine.setVolume(e.target.value);
+      soundVolumeVal.textContent = `${Math.round(e.target.value * 100)}%`;
+    });
+  }
+
+  // Test Sound
+  if (btnTestSound) {
+    btnTestSound.addEventListener('click', () => {
+      SoundEngine.playCelebration("Wow! Cậu giỏi quá, xong việc rồi nè! Tiếp tục phát huy nhé!");
+    });
+  }
+
+  // Reset Audio to Default Chime
+  if (btnResetAudio) {
+    btnResetAudio.addEventListener('click', async () => {
+      await SoundEngine.resetAudio();
+      syncAudioUI();
+      alert('Đã khôi phục âm thanh chuông Ting Ting mặc định! 🔔');
+    });
+  }
+
+  // Initial Sync
+  syncAudioUI();
 
   // 6. Setup Theme Studio Inputs
   const customWallpaperInput = document.getElementById('custom-wallpaper-file');

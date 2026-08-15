@@ -161,8 +161,8 @@ const CompanionManager = (() => {
     // Confetti particles explosion
     launchConfetti();
 
-    // Sound chime
-    SoundEngine.playCelebrationChime();
+    // Play Celebration Audio / Voice based on user preference
+    SoundEngine.playCelebration(message);
 
     // Reset dismiss timer
     if (hideTimeout) clearTimeout(hideTimeout);

@@ -40,8 +40,8 @@
       </div>
 
       <div class="header-controls">
-        <button id="btn-toggle-sound" class="icon-btn" title="Bật/Tắt âm thanh chúc mừng">
-          <span>🔔</span> Bật Âm
+        <button id="btn-open-audio-modal" class="icon-btn" title="Cài đặt âm thanh & giọng nói chúc mừng">
+          <span id="sound-btn-icon">🔔</span> <span id="sound-btn-label">Âm Thanh</span>
         </button>
         <button id="btn-open-theme-modal" class="icon-btn" title="Tùy chỉnh hình nền & giao diện">
           <span>🖼️</span> Đổi Nền
@@ -246,12 +246,87 @@
     </div>
   </div>
 
+  <!-- Modal 3: Audio & Voice Studio -->
+  <div id="modal-audio-settings" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2><span>🔊</span> Studio Âm Thanh & Giọng Nói Chúc Mừng</h2>
+        <button class="btn-close-modal" title="Đóng">✕</button>
+      </div>
+      <div class="modal-body">
+        
+        <div>
+          <div class="setting-section-title">1. Chọn Chế Độ Âm Thanh Chúc Mừng</div>
+          <div class="audio-mode-grid" id="audio-mode-selector">
+            <div class="audio-mode-card active" data-mode="chime">
+              <div class="mode-card-icon">🔔</div>
+              <div class="mode-card-title">Chuông Ting Ting</div>
+              <div class="mode-card-desc">Âm thanh du dương, nhẹ nhàng tạo cảm hứng</div>
+            </div>
+
+            <div class="audio-mode-card" data-mode="voice">
+              <div class="mode-card-icon">🗣️</div>
+              <div class="mode-card-title">Giọng AI Tiếng Việt</div>
+              <div class="mode-card-desc">Đọc to câu khen ngợi ngẫu nhiên của nhân vật</div>
+            </div>
+
+            <div class="audio-mode-card" data-mode="custom">
+              <div class="mode-card-icon">🎵</div>
+              <div class="mode-card-title">File Tự Tải (MP3)</div>
+              <div class="mode-card-desc">Phát đoạn âm thanh / giọng nói riêng của bạn</div>
+            </div>
+
+            <div class="audio-mode-card" data-mode="mute">
+              <div class="mode-card-icon">🔇</div>
+              <div class="mode-card-title">Tắt Âm Thanh</div>
+              <div class="mode-card-desc">Chế độ im lặng, chỉ hiện pop-up & pháo hoa</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="setting-section-title">2. Tải File Âm Thanh Riêng Từ Máy Tính (MP3 / WAV / M4A)</div>
+          <label class="upload-box" for="custom-audio-file">
+            <div class="upload-box-icon">🎙️</div>
+            <p><strong>Bấm vào đây để tải file âm thanh của bạn</strong></p>
+            <p id="custom-audio-status" style="font-size: 0.78rem; color: #a5b4fc; margin-top: 4px;">
+              (Hỗ trợ file nhạc khích lệ, tiếng anime, meme hoặc giọng thu âm)
+            </p>
+            <input type="file" id="custom-audio-file" accept="audio/*" style="display: none;" />
+          </label>
+        </div>
+
+        <div>
+          <div class="setting-section-title">3. Âm Lượng (Volume)</div>
+          <div class="range-group">
+            <div class="range-label-row">
+              <span>Độ lớn âm lượng</span>
+              <strong id="sound-volume-val">80%</strong>
+            </div>
+            <input type="range" id="sound-volume-range" class="custom-range" min="0" max="1" step="0.05" value="0.8" />
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="setting-section-title">4. Nghe Thử & Khôi Phục</div>
+          <button id="btn-test-sound" class="btn-test-celebration" style="background: rgba(99, 102, 241, 0.2); border-color: var(--primary);">
+            🔊 Nghe Thử Âm Thanh / Lời Khen Ngay
+          </button>
+          <button id="btn-reset-audio" class="btn-test-celebration" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.35); color: #fca5a5;">
+            🧹 Khôi Phục Âm Chuông Gốc Ban Đầu
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
   <!-- Application Logic Scripts -->
-  <script src="js/storage.js?v=3"></script>
-  <script src="js/audio.js?v=3"></script>
-  <script src="js/theme.js?v=3"></script>
-  <script src="js/companion.js?v=3"></script>
-  <script src="js/tasks.js?v=3"></script>
-  <script src="js/app.js?v=3"></script>
+  <script src="js/storage.js?v=4"></script>
+  <script src="js/audio.js?v=4"></script>
+  <script src="js/theme.js?v=4"></script>
+  <script src="js/companion.js?v=4"></script>
+  <script src="js/tasks.js?v=4"></script>
+  <script src="js/app.js?v=4"></script>
 </body>
 </html>
