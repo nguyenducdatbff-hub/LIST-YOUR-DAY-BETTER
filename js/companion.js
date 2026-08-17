@@ -318,13 +318,6 @@ const CompanionManager = (() => {
         opacity: 1
       });
     }
-        vy: -(Math.random() * 12 + 10),
-        gravity: 0.35,
-        rotation: Math.random() * 360,
-        rotSpeed: (Math.random() - 0.5) * 15,
-        opacity: 1
-      });
-    }
 
     let animationFrame = null;
 
