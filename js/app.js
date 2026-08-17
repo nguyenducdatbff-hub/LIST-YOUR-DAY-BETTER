@@ -269,9 +269,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  const btnTest100Celebration = document.getElementById('btn-test-100-celebration');
+
   if (btnTestCelebration) {
     btnTestCelebration.addEventListener('click', () => {
       CompanionManager.celebrate("Đây là hiệu ứng chúc mừng mẫu nè! Siêu tuyệt vời luôn! 🎉");
+    });
+  }
+
+  if (btnTest100Celebration) {
+    btnTest100Celebration.addEventListener('click', () => {
+      CompanionManager.celebrate100Percent();
     });
   }
 

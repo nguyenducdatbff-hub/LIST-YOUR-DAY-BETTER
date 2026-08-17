@@ -146,14 +146,23 @@ const CompanionManager = (() => {
     });
   }
 
-  // Trigger celebration popup
+  // Trigger standard celebration popup
   function celebrate(customMessage = null) {
     const bubble = document.getElementById('companion-speech-bubble');
     const bubbleText = document.getElementById('companion-quote-text');
     const avatarBox = document.getElementById('companion-avatar-box');
 
+    if (bubble) {
+      bubble.classList.remove('grand-milestone');
+      bubble.innerHTML = `
+        <span class="speech-bubble-tag">Bạn đồng hành</span>
+        <p id="companion-quote-text"></p>
+      `;
+    }
+
     const message = customMessage || getRandomQuote();
-    if (bubbleText) bubbleText.textContent = message;
+    const updatedText = document.getElementById('companion-quote-text');
+    if (updatedText) updatedText.textContent = message;
 
     if (avatarBox) avatarBox.classList.add('active');
     if (bubble) bubble.classList.add('active');
@@ -171,15 +180,119 @@ const CompanionManager = (() => {
     }, 4500);
   }
 
+  // Trigger Grand 100% Milestone Celebration with Interactive Decision Buttons
+  function celebrate100Percent() {
+    const bubble = document.getElementById('companion-speech-bubble');
+    const avatarBox = document.getElementById('companion-avatar-box');
+
+    if (!bubble) return;
+
+    if (hideTimeout) clearTimeout(hideTimeout);
+
+    bubble.classList.add('grand-milestone');
+    bubble.innerHTML = `
+      <span class="badge-grand-milestone">🏆 100% TIẾN ĐỘ HOÀN THÀNH</span>
+      <p id="companion-quote-text" style="font-size: 0.95rem; font-weight: 700; margin-bottom: 6px;">
+        🎉 XUẤT SẮC! Cậu đã hoàn thành 100% mục tiêu hôm nay rồi! Thật phi thường!
+      </p>
+      <p style="font-size: 0.82rem; color: #e0e7ff; margin-bottom: 4px;">
+        Cậu có muốn làm mới danh sách không?
+      </p>
+      <div class="speech-actions-group">
+        <button class="btn-bubble-action action-uncheck" data-action="uncheck">
+          <span>🔄</span> Bỏ tick làm lại (bắt đầu mới)
+        </button>
+        <button class="btn-bubble-action action-clear" data-action="clear">
+          <span>🗑️</span> Xóa việc đã xong (dọn dẹp)
+        </button>
+        <button class="btn-bubble-action action-rest" data-action="rest">
+          <span>☕</span> Nghỉ ngơi thôi (giữ nguyên)
+        </button>
+      </div>
+    `;
+
+    if (avatarBox) avatarBox.classList.add('active');
+    bubble.classList.add('active');
+
+    // Giant double Confetti explosion for 100% milestone
+    launchConfetti(100);
+
+    // Play Grand celebratory voice / chime
+    SoundEngine.playCelebration("Xuất sắc! Cậu đã hoàn thành 100% mục tiêu hôm nay rồi! Cậu làm việc tuyệt vời lắm!");
+
+    // Wire click actions for the 3 choices
+    const btnUncheck = bubble.querySelector('[data-action="uncheck"]');
+    const btnClear = bubble.querySelector('[data-action="clear"]');
+    const btnRest = bubble.querySelector('[data-action="rest"]');
+
+    if (btnUncheck) {
+      btnUncheck.addEventListener('click', (e) => {
+        e.stopPropagation();
+        TaskManager.uncheckAllTasks();
+        showFeedbackAndDismiss(
+          "Tuyệt vời! Bắt đầu chu kỳ mới đầy năng lượng nhé! Cậu đỉnh thật sự! 🔥",
+          "Tuyệt vời! Bắt đầu chu kỳ mới đầy năng lượng nhé!"
+        );
+      });
+    }
+
+    if (btnClear) {
+      btnClear.addEventListener('click', (e) => {
+        e.stopPropagation();
+        TaskManager.clearCompletedTasks();
+        showFeedbackAndDismiss(
+          "Đã dọn dẹp sạch sẽ! Sẵn sàng đón nhận những mục tiêu mới toanh! ✨",
+          "Đã dọn dẹp sạch sẽ! Sẵn sàng đón nhận những mục tiêu mới toanh!"
+        );
+      });
+    }
+
+    if (btnRest) {
+      btnRest.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showFeedbackAndDismiss(
+          "Quá xứng đáng! Cậu đã làm việc rất chăm chỉ rồi, giờ hãy thư giãn và nghỉ ngơi thật thoải mái đi nhé! 💖☕",
+          "Quá xứng đáng! Cậu đã làm việc rất chăm chỉ rồi, hãy nghỉ ngơi thật thoải mái đi nhé!"
+        );
+      });
+    }
+
+    // Auto dismiss after 20 seconds if user doesn't pick anything
+    hideTimeout = setTimeout(() => {
+      dismiss();
+    }, 20000);
+  }
+
+  function showFeedbackAndDismiss(displayMessage, voiceMessage) {
+    const bubble = document.getElementById('companion-speech-bubble');
+    if (!bubble) return;
+
+    if (hideTimeout) clearTimeout(hideTimeout);
+
+    bubble.innerHTML = `
+      <span class="speech-bubble-tag">Bạn đồng hành</span>
+      <p id="companion-quote-text" style="font-size: 0.92rem; font-weight: 600;">${escapeHtml(displayMessage)}</p>
+    `;
+
+    SoundEngine.playCelebration(voiceMessage);
+
+    hideTimeout = setTimeout(() => {
+      dismiss();
+    }, 4500);
+  }
+
   function dismiss() {
     const bubble = document.getElementById('companion-speech-bubble');
     const avatarBox = document.getElementById('companion-avatar-box');
-    if (bubble) bubble.classList.remove('active');
+    if (bubble) {
+      bubble.classList.remove('active');
+      bubble.classList.remove('grand-milestone');
+    }
     if (avatarBox) avatarBox.classList.remove('active');
   }
 
   // Pure Canvas Confetti Engine (Zero external dependencies)
-  function launchConfetti() {
+  function launchConfetti(particleCount = 65) {
     const canvas = document.getElementById('confetti-canvas');
     if (!canvas) return;
 
@@ -188,16 +301,23 @@ const CompanionManager = (() => {
     canvas.height = window.innerHeight;
 
     const particles = [];
-    const colors = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#06b6d4', '#a855f7', '#fbbf24'];
+    const colors = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#06b6d4', '#a855f7', '#fbbf24', '#f43f5e'];
 
-    for (let i = 0; i < 65; i++) {
+    for (let i = 0; i < particleCount; i++) {
       particles.push({
-        x: window.innerWidth * (0.6 + Math.random() * 0.35),
+        x: window.innerWidth * (0.3 + Math.random() * 0.65),
         y: window.innerHeight * 0.85,
         w: Math.random() * 9 + 5,
         h: Math.random() * 7 + 4,
         color: colors[Math.floor(Math.random() * colors.length)],
-        vx: (Math.random() - 0.5) * 12 - 3,
+        vx: (Math.random() - 0.5) * 16,
+        vy: -(Math.random() * 14 + 10),
+        gravity: 0.35,
+        rotation: Math.random() * 360,
+        rotSpeed: (Math.random() - 0.5) * 15,
+        opacity: 1
+      });
+    }
         vy: -(Math.random() * 12 + 10),
         gravity: 0.35,
         rotation: Math.random() * 360,
@@ -251,6 +371,7 @@ const CompanionManager = (() => {
   return {
     init,
     celebrate,
+    celebrate100Percent,
     dismiss,
     setCustomAvatar,
     setPresetAvatar,

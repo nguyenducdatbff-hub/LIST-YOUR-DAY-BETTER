@@ -69,10 +69,27 @@ const TaskManager = (() => {
     task.completed = !task.completed;
 
     if (task.completed) {
-      // Trigger Companion Mascot celebration!
-      CompanionManager.celebrate();
+      // Check if all tasks are completed (100% progress milestone)
+      const allDone = tasks.length > 0 && tasks.every(t => t.completed);
+      if (allDone) {
+        CompanionManager.celebrate100Percent();
+      } else {
+        CompanionManager.celebrate();
+      }
     }
 
+    save();
+  }
+
+  function uncheckAllTasks() {
+    tasks.forEach(t => {
+      t.completed = false;
+    });
+    save();
+  }
+
+  function clearCompletedTasks() {
+    tasks = tasks.filter(t => !t.completed);
     save();
   }
 
@@ -236,6 +253,8 @@ const TaskManager = (() => {
     addTask,
     toggleTask,
     deleteTask,
+    uncheckAllTasks,
+    clearCompletedTasks,
     setFilter
   };
 })();

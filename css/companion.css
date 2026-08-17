@@ -226,14 +226,94 @@
   border-color: var(--primary);
 }
 
+/* Grand 100% Milestone Speech Bubble Styles */
+.companion-speech-bubble.grand-milestone {
+  max-width: 350px;
+  background: linear-gradient(135deg, rgba(30, 27, 75, 0.95), rgba(49, 46, 129, 0.95));
+  border: 1.5px solid rgba(251, 191, 36, 0.6);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(251, 191, 36, 0.35);
+  animation: milestonePulse 2s infinite alternate ease-in-out;
+}
+
+@keyframes milestonePulse {
+  from { box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 15px rgba(251, 191, 36, 0.25); }
+  to { box-shadow: 0 16px 45px rgba(0, 0, 0, 0.6), 0 0 28px rgba(251, 191, 36, 0.5); }
+}
+
+.badge-grand-milestone {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.15);
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  margin-bottom: 6px;
+}
+
+.speech-actions-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.btn-bubble-action {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-bubble-action:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateX(3px);
+}
+
+.btn-bubble-action.action-uncheck:hover {
+  background: rgba(99, 102, 241, 0.3);
+  border-color: var(--primary);
+}
+
+.btn-bubble-action.action-clear:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.6);
+}
+
+.btn-bubble-action.action-rest:hover {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: rgba(16, 185, 129, 0.6);
+}
+
 @media (max-width: 640px) {
   .companion-widget {
     bottom: 20px;
     right: 20px;
   }
   .companion-speech-bubble {
-    max-width: 230px;
+    max-width: 250px;
     font-size: 0.84rem;
+  }
+  .companion-speech-bubble.grand-milestone {
+    max-width: 290px;
   }
   .companion-avatar-container {
     width: 72px;
